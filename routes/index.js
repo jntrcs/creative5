@@ -18,7 +18,12 @@ time : { type : Date, default: Date.now }
 });
 
 var Email = mongoose.model('Email', emailSchema); //Makes an object from that schema as a model
+var e = new Email({SenderName: "Jack", Subject: "kdslsfjs", EmailBody:"asdf"});
+e.save(function(err,post){
+if(err)return console.error(err);
 
+console.log(post);
+});
 var db = mongoose.connection; //Saves the connection as a variable to use
 db.on('error', console.error.bind(console, 'connection error:')); //Checks for connection errors
   db.once('open', function() { //Lets us know when we're connected
