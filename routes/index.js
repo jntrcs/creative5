@@ -47,8 +47,8 @@ var credentials;
 //console.log(TOKEN_PATH);
 // Load client secrets from a local file.
 
-var minutes=.2, the_interval = minutes * 60 * 1000;
-//setInterval(function() {
+var minutes=1, the_interval = minutes * 60 * 1000;
+setInterval(function() {
 console.log("running regularly");
 fs.readFile('client_secret.json', function processClientSecrets(err, content) {
   if (err) {
@@ -60,7 +60,7 @@ fs.readFile('client_secret.json', function processClientSecrets(err, content) {
 credentials = JSON.parse(content);
   authorize(credentials, getAllEmails);
 });
-//}, the_interval);
+}, the_interval);
 /**
  * Create an OAuth2 client with the given credentials, and then execute the
  * given callback function.
@@ -143,7 +143,7 @@ function storeToken(token) {
 
 function getAllEmails(auth) {
   var gmail = google.gmail('v1');
-console.log(auth);
+//console.log(auth);
   gmail.users.messages.list({
     auth: auth,
     userId: 'me',
@@ -152,7 +152,6 @@ console.log(auth);
       console.log('The API returned an error: ' + err);
       return;
     }
-    if(response.resultSizeEstimate>0){
 for (i in response.messages)
 {
 //console.log(response.messages[i].id);
@@ -218,7 +217,7 @@ console.log(resp);
 }
 }.bind({id : id}));
 };
-};
+
     });
  };
 
