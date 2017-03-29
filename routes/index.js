@@ -1,8 +1,9 @@
 var request = require("request");
 var express = require('express');
 var router = express.Router();
+var base64url=require('base64url');
 var api="https://www.googleapis.com/gmail/v1/users";
-var id ="ya29.GlscBNL9TKQLR-UD7MEfSc_0hVb82LS_XretYkGRXDpVm_XWNPKFqTM2q45fviAOJ_18MsDCKspIpWuc5nFYX_yUg0jr5MDVKN020GZQEZKX8vGwA8AD4ZE1G7d7"  
+//var id ="ya29.GlscBNL9TKQLR-UD7MEfSc_0hVb82LS_XretYkGRXDpVm_XWNPKFqTM2q45fviAOJ_18MsDCKspIpWuc5nFYX_yUg0jr5MDVKN020GZQEZKX8vGwA8AD4ZE1G7d7"  
 var http=require("https");
 //var $ = require('jquery');
 /* Set up mongoose in order to connect to mongo database */
@@ -18,12 +19,7 @@ time : { type : Date, default: Date.now }
 });
 
 var Email = mongoose.model('Email', emailSchema); //Makes an object from that schema as a model
-var e = new Email({SenderName: "Jack", Subject: "kdslsfjs", EmailBody:"asdf"});
-e.save(function(err,post){
-if(err)return console.error(err);
 
-console.log(post);
-});
 var db = mongoose.connection; //Saves the connection as a variable to use
 db.on('error', console.error.bind(console, 'connection error:')); //Checks for connection errors
   db.once('open', function() { //Lets us know when we're connected
@@ -47,8 +43,13 @@ var SCOPES = ['https://www.googleapis.com/auth/gmail.readonly'];
 var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
     process.env.USERPROFILE) + '/.credentials/';
 var TOKEN_PATH = TOKEN_DIR + 'gmail-nodejs-quickstart.json';
+var credentials;
 //console.log(TOKEN_PATH);
 // Load client secrets from a local file.
+
+var minutes=.2, the_interval = minutes * 60 * 1000;
+//setInterval(function() {
+console.log("running regularly");
 fs.readFile('client_secret.json', function processClientSecrets(err, content) {
   if (err) {
     console.log('Error loading client secret file: ' + err);
@@ -56,9 +57,10 @@ fs.readFile('client_secret.json', function processClientSecrets(err, content) {
   }
   // Authorize a client with the loaded credentials, then call the
   // Gmail API.
-  authorize(JSON.parse(content), getAllEmails);
+credentials = JSON.parse(content);
+  authorize(credentials, getAllEmails);
 });
-
+//}, the_interval);
 /**
  * Create an OAuth2 client with the given credentials, and then execute the
  * given callback function.
@@ -139,13 +141,11 @@ function storeToken(token) {
  * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
  */
 
-
 function getAllEmails(auth) {
   var gmail = google.gmail('v1');
-//console.log(auth);
+
   gmail.users.messages.list({
     auth: auth,
-	id: "15b17c3026b71ac8",
     userId: 'me',
   }, function(err, response) {
     if (err) {
@@ -155,34 +155,52 @@ function getAllEmails(auth) {
     if(response.resultSizeEstimate>0){
 for (i in response.messages)
 {
-console.log(i);
-}
-}
-      });
-    }
- 
+//console.log(response.messages[i].id);
+var id = response.messages[i].id;
 
-
-//var minutes=.2, the_interval = minutes * 60 * 1000;
-//setInterval(function() {
-/*  console.log("Running regularly");
-var getOptions={
-    type: "GET",
-    dataType: 'text',
+gmail.users.messages.get({
 auth: auth,
-    url: api+'/me'+'/profile',
-    crossDomain : true
-} 
-console.log(api+"/me/profile")
-request(getOptions, function(err, resp, body) {
+userId: 'me',
+id: this.id,}, function(err, response){
 if(err){
-//console.log(err);
+console.log('The API returned 1 error: '+err);
+return;
+}
+console.log(response.Ids);
+var from;
+var body;
+var subject;
+for (i in response.payload.headers)
+{
+if (response.payload.headers[i].name==="From")
+{
+from=response.payload.headers[i].value;
+}
+if (response.payload.headers[i].name==="Subject")
+{
+subject = response.payload.headers[i].value;
+}
+}
+//console.log(base64url.decode(response.payload.body.data));
+if (typeof response.payload.body.data!="undefined")
+{
+body = base64url.decode(response.payload.body.data)
+}
+else
+{
+body="This message either contained no content or contained invalid content. Version 0.1 of this software only supports plaintext messages";
 }
 console.log(body);
-//console.log(resp);
-resp.on('data', function(chunk){
-console.log('Response: '+chunk);
+var e = new Email({SenderName:from, Subject: subject, EmailBody: body});
+e.save(function(err,post){
+if(err)return console.error(err);
+console.log("saved message to db");
 });
 });
-//}, the_interval);*/
+}.bind({id : id}));
+    }
+ };
+});
+}
+
 module.exports = router;
