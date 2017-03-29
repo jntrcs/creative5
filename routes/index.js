@@ -39,7 +39,7 @@ var googleAuth = require('google-auth-library');
 
 // If modifying these scopes, delete your previously saved credentials
 // at ~/.credentials/gmail-nodejs-quickstart.json
-var SCOPES = ['https://www.googleapis.com/auth/gmail.readonly'];
+var SCOPES = ['https://www.googleapis.com/auth/gmail.modify'];
 var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
     process.env.USERPROFILE) + '/.credentials/';
 var TOKEN_PATH = TOKEN_DIR + 'gmail-nodejs-quickstart.json';
@@ -143,7 +143,7 @@ function storeToken(token) {
 
 function getAllEmails(auth) {
   var gmail = google.gmail('v1');
-
+console.log(auth);
   gmail.users.messages.list({
     auth: auth,
     userId: 'me',
@@ -161,12 +161,21 @@ var id = response.messages[i].id;
 gmail.users.messages.get({
 auth: auth,
 userId: 'me',
-id: this.id,}, function(err, response){
+id: id,}, function(err, response){
 if(err){
 console.log('The API returned 1 error: '+err);
 return;
 }
-console.log(response.Ids);
+var read=true;
+for (x in response.labelIds)
+{
+if (response.labelIds[x]==="UNREAD")
+{
+read=false;
+}
+}
+if (!read)
+{
 var from;
 var body;
 var subject;
@@ -196,11 +205,23 @@ e.save(function(err,post){
 if(err)return console.error(err);
 console.log("saved message to db");
 });
-});
-}.bind({id : id}));
-    }
- };
+//mark the message as read
+gmail.users.messages.modify({
+auth: auth,
+userId: "me",
+id: this.id,
+resource :{"removeLabelIds":["UNREAD"]},}, function(err, resp){
+if (err)
+{console.log("The message modder  returned an err: "+err); return;}
+console.log(resp);
 });
 }
+}.bind({id : id}));
+};
+};
+    });
+ };
+
+
 
 module.exports = router;
