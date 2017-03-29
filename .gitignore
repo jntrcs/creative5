@@ -2,4 +2,6 @@
 /views
 app.js
 package.json
-
+client*
+node*
+cs*
