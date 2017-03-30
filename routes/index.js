@@ -1,4 +1,4 @@
-//var request = require("request");
+var createTextVersion=require("textversionjs");
 var express = require('express');
 var router = express.Router();
 var base64url=require('base64url');
@@ -10,7 +10,7 @@ var http=require("https");
 var mongoose = require('mongoose'); //Adds mongoose as a usable dependency
 
 
-mongoose.connect('mongodb://localhost/emailDB'); //Connects to a mongo database called "emailDB"
+mongoose.connect('mongodb://localhost/emailDB3'); //Connects to a mongo database called "emailDB"
 
 var emailSchema = mongoose.Schema({ //Defines the Schema for this database
 SenderName: String,
@@ -27,10 +27,10 @@ db.on('error', console.error.bind(console, 'connection error:')); //Checks for c
   console.log('Connected');
 });
 
-var newEmail = new Email({SenderName:"Bob", Subject:"Poop", EmailBody:"Test"});
-newEmail.save(function(err, post){
-  if (err) return console.error(err);
-});
+//var newEmail = new Email({SenderName:"Bob", Subject:"Poop", EmailBody:"Test"});
+//newEmail.save(function(err, post){
+  //if (err) return console.error(err);
+//});
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.sendFile('index', { root: 'public' });
@@ -186,11 +186,13 @@ if(err){
 console.log('The API returned 1 error: '+err);
 return;
 }
+
 var read=true;
 for (x in response.labelIds)
 {
 if (response.labelIds[x]==="UNREAD")
 {
+//console.log(response);
 read=false;
 }
 }
@@ -210,14 +212,21 @@ if (response.payload.headers[i].name==="Subject")
 subject = response.payload.headers[i].value;
 }
 }
-//console.log(base64url.decode(response.payload.body.data));
+
 if (typeof response.payload.body.data!="undefined")
 {
-body = base64url.decode(response.payload.body.data)
+body = createTextVersion(base64url.decode(response.payload.body.data));
 }
 else
 {
-body="This message either contained no content or contained invalid content. Version 0.1 of this software only supports plaintext messages";
+body="";
+for (i in response.payload.parts)
+{
+if (typeof response.payload.parts[i].body.data !="undefined")
+{
+body +=createTextVersion(base64url.decode(response.payload.parts[i].body.data));
+}
+}
 }
 console.log(body);
 var e = new Email({SenderName:from, Subject: subject, EmailBody: body});

@@ -24,7 +24,8 @@ function emailFetcher ($http) {
 
 function blogController($scope, emailFetcher) {
   console.log("in blogController"); 
-  $scope.emails = [{SenderName:"Jerry", Subject:"Mom", EmailBody:"Test", Time:"5:00"}]; // This array will hold all the emails on the blog
+  $scope.emails = []; // This array will hold all the emails on the blog
+
   console.log("email fetcher");
   emailFetcher.get()
     .then(function (data) {
