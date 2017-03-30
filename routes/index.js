@@ -1,4 +1,4 @@
-var request = require("request");
+//var request = require("request");
 var express = require('express');
 var router = express.Router();
 var base64url=require('base64url');
@@ -26,19 +26,27 @@ db.on('error', console.error.bind(console, 'connection error:')); //Checks for c
   console.log('Connected');
 });
 
+var newEmail = new Email({SenderName:"Bob", Subject:"Poop", EmailBody:"Test"});
+newEmail.save(function(err, post){
+  if (err) return console.error(err);
+});
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
 // I'm not sure how we are formatting this, but here is the get
-router.get('/emals', function(req, res){
+router.get('/emails', function(req, res){
   console.log("In the GET route");
-  Email.find(function(err, emailList) { // Calls find method on DB
-    if (err) return console.log(err); // Print our error if there is one
-      else {
+  Email.find().toArray(function(err, emailList) { // Calls find method on DB
+    if (err) { 
+      console.log(err); // Print our error if there is one
+    } else if(emailList.length) {
+      console.log("Query Worked");
+      console.log(emailList);
+      res.send(emailList);      
+    } else {
         console.log(emailList); // Lets log what we get back
-        res.json(emailList);
       }
   })
 });

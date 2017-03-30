@@ -4,7 +4,7 @@ myApp.factory('emailFetcher', emailFetcher)
 myApp.controller('blogController', blogController);
 
 function emailFetcher ($http) {
-
+  console.log("In email fetcher");
   var API_ROOT = 'emails';
   return {
     get: function () {
@@ -19,10 +19,11 @@ function emailFetcher ($http) {
 
 function blogController($scope, emailFetcher) {
     
-  $scope.emails = []; // This array will hold all the emails on the blog
-
+  $scope.emails = [{SenderName:"Bob", Subject:"Poop", EmailBody:"Test"}]; // This array will hold all the emails on the blog
+  console.log("email fetcher");
   emailFetcher.get()
     .then(function (data) {
+      console.log("Tried to get emails");
       $scope.emails = data;
       console.log("Got the Emails");
       console.log(data);
