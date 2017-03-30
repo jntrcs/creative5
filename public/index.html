@@ -13,13 +13,18 @@
   <h1>Auto-Blog for Missionaries (No Moms Necessary!)</h1>
   <h3>This is a blog that is publishable by sending an email to missionaryinstablog@gmail.com. Our server will parse the email and post the contents here. That way, missionaries can post to their blog without leaving missionary mail, and parents don't have to be responsible!</h3>
   <div ng-app='myApp' ng-controller='blogController'>
-    <div id="email"  ng-if='emails.length'>
-    <div id="email_title" ng-repeat-start='email in emails'>
-     <h1> {{email.Subject}}</h1> Posted on: {{email.time}}
+    <div ng-if='emails.length'>
+    <h2>Quick Links</h2>
+    <div id="email_links" ng-repeat='em in emails'>
+      {{em.time}}
     </div>
-<div id="email_sender">Posted by:  {{email.SenderName}}</div>
-    <div id="email_body" ng-repeat-end>
-      {{email.EmailBody}}
+    <div id="email" ng-repeat='email in emails | reverse'>
+      <div id="email_title">
+        {{email.Subject}} - {{email.time}}
+      </div>
+      <div id="email_body">
+        {{email.EmailBody}}
+      </div>
     </div>
     </div>
     </div>
