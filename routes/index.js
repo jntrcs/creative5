@@ -9,7 +9,8 @@ var http=require("https");
 /* Set up mongoose in order to connect to mongo database */
 var mongoose = require('mongoose'); //Adds mongoose as a usable dependency
 
-mongoose.connect('mongodb://localhost/emailDB'); //Connects to a mongo database called "commentDB"
+
+mongoose.connect('mongodb://localhost/emailDB'); //Connects to a mongo database called "emailDB"
 
 var emailSchema = mongoose.Schema({ //Defines the Schema for this database
 SenderName: String,
@@ -32,13 +33,14 @@ newEmail.save(function(err, post){
 });
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.sendFile('index', { root: 'public' });
 });
 
 // I'm not sure how we are formatting this, but here is the get
 router.get('/emails', function(req, res){
   console.log("In the GET route");
-  Email.find().toArray(function(err, emailList) { // Calls find method on DB
+  Email.find(function(err, emailList) { // Calls find method on DB
+    console.log("In the callback");
     if (err) { 
       console.log(err); // Print our error if there is one
     } else if(emailList.length) {

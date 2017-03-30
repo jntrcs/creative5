@@ -1,7 +1,17 @@
-h1{
+
+h1, h3{
   text-align:center;
 }
 
-#emails{
-  text-align:center;
+#email{
+  border-style: double;
+  padding: 10px;
+  Margin: 10px;
 }
+
+#email_title{
+  text-align: center;
+  border-bottom-style: double;
+  padding: 10px;
+}
+

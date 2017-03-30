@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>Missionary Blog</title>
-  <link rel="stylsheet" type="text/css" href="./stylesheets/blog.css">
+  <link rel="stylesheet" type="text/css" href="stylesheets/blog.css">
   <!-- AngularJS -->
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
   <!-- Our Javascript -->
@@ -11,12 +11,13 @@
 </head>
 <body>
   <h1>Auto-Blog for Missionary Moms</h1>
-  <div ng-ap='myApp' ng-controller='blogController'>
-    <div ng-if='emails.length'>
-    <div ng-repeat-start='email in emails'>
+  <h3>This is your description</h3>
+  <div ng-app='myApp' ng-controller='blogController'>
+    <div id="email"  ng-if='emails.length'>
+    <div id="email_title" ng-repeat-start='email in emails'>
       {{email.Subject}} - {{email.time}}
     </div>
-    <div ng-repeat-end>
+    <div id="email_body" ng-repeat-end>
       {{email.EmailBody}}
     </div>
     </div>
