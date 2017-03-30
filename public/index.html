@@ -13,12 +13,18 @@
   <h1>Auto-Blog for Missionary Moms</h1>
   <h3>This is your description</h3>
   <div ng-app='myApp' ng-controller='blogController'>
-    <div id="email"  ng-if='emails.length'>
-    <div id="email_title" ng-repeat-start='email in emails'>
-      {{email.Subject}} - {{email.time}}
+    <div ng-if='emails.length'>
+    <h2>Quick Links</h2>
+    <div id="email_links" ng-repeat='em in emails'>
+      {{em.time}}
     </div>
-    <div id="email_body" ng-repeat-end>
-      {{email.EmailBody}}
+    <div id="email" ng-repeat='email in emails | reverse'>
+      <div id="email_title">
+        {{email.Subject}} - {{email.time}}
+      </div>
+      <div id="email_body">
+        {{email.EmailBody}}
+      </div>
     </div>
     </div>
     </div>
