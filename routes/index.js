@@ -1,4 +1,4 @@
-//var request = require("request");
+var createTextVersion=require("textversionjs");
 var express = require('express');
 var router = express.Router();
 var base64url=require('base64url');
@@ -69,7 +69,7 @@ var credentials;
 // Load client secrets from a local file.
 
 var minutes=1, the_interval = minutes * 60 * 1000;
-//setInterval(function() {
+setInterval(function() {
 console.log("running regularly");
 fs.readFile('client_secret.json', function processClientSecrets(err, content) {
   if (err) {
@@ -81,7 +81,7 @@ fs.readFile('client_secret.json', function processClientSecrets(err, content) {
 credentials = JSON.parse(content);
   authorize(credentials, getAllEmails);
 });
-//}, the_interval);
+}, the_interval);
 /**
  * Create an OAuth2 client with the given credentials, and then execute the
  * given callback function.
@@ -215,7 +215,7 @@ subject = response.payload.headers[i].value;
 
 if (typeof response.payload.body.data!="undefined")
 {
-body = base64url.decode(response.payload.body.data)
+body = createTextVersion(base64url.decode(response.payload.body.data));
 }
 else
 {
@@ -224,7 +224,7 @@ for (i in response.payload.parts)
 {
 if (typeof response.payload.parts[i].body.data !="undefined")
 {
-body +=base64url.decode(response.payload.parts[i].body.data);
+body +=createTextVersion(base64url.decode(response.payload.parts[i].body.data));
 }
 }
 }
@@ -234,7 +234,7 @@ e.save(function(err,post){
 if(err)return console.error(err);
 console.log("saved message to db");
 });
-/*mark the message as read
+//mark the message as read
 gmail.users.messages.modify({
 auth: auth,
 userId: "me",
@@ -243,7 +243,7 @@ resource :{"removeLabelIds":["UNREAD"]},}, function(err, resp){
 if (err)
 {console.log("The message modder  returned an err: "+err); return;}
 console.log(resp);
-});*/
+});
 }
 }.bind({id : id}));
 };
