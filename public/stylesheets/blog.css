@@ -1,17 +1,32 @@
+body{
+  background:lightblue;
+}
 
-h1, h3{
+h1, h2, #email_links{
   text-align:center;
+}
+
+h3{
+  text-align: center;
+  margin: 5px;
+  padding:0px;
 }
 
 #email{
   border-style: double;
   padding: 10px;
-  Margin: 10px;
+  margin: 10px;
+  background:white;
 }
 
 #email_title{
   text-align: center;
   border-bottom-style: solid;
   padding: 10px;
+  font-style: georgia;
+}
+
+#email_body{
+  margin: 10px;
 }
 

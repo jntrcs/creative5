@@ -16,11 +16,12 @@
     <div ng-if='emails.length'>
     <h2>Quick Links</h2>
     <div id="email_links" ng-repeat='em in emails'>
-      {{em.time}}
+      <a ng-href="#{{$index}}">{{em.Subject}}</a>
     </div>
     <div id="email" ng-repeat='email in emails | reverse'>
+      <h3 id="{{$index}}">{{email.Subject}}</h3>
       <div id="email_title">
-        {{email.Subject}} - {{email.time}}
+        {{email.time}} : Sent By {{email.SenderName}}
       </div>
       <div id="email_body">
         {{email.EmailBody}}
