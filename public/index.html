@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Missionary Blog</title>
+  <link rel="stylsheet" type="text/css" href="stylesheets/blog.css">
+  <!-- AngularJS -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+  <!-- Our Javascript -->
+  <script src="javascripts/blog.js"></script>
+</head>
+<body>
+  <h1>Auto-Blog for Missionary Moms</h1>
+  <div ng-controller="blogController" ng-init="getEmails()">
+    <div ng-repeat-start='email in emails'>
+      {{email.Subject}} - {{email.time}}
+    </div>
+    <div ng-repeat-end>
+      {{email.EmailBody}}
+    </div>
+    </div>
+  </div>
+</body>
+</html>

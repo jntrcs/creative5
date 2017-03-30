@@ -30,6 +30,17 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+// I'm not sure how we are formatting this, but here is the get
+router.get('/emals', function(req, res){
+  console.log("In the GET route");
+  Email.find(function(err, emailList) { // Calls find method on DB
+    if (err) return console.log(err); // Print our error if there is one
+      else {
+        console.log(emailList); // Lets log what we get back
+        res.json(emailList);
+      }
+  })
+});
 
 var fs =require('fs');
 var readline = require('readline');
